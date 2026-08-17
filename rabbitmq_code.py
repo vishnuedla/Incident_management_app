@@ -46,3 +46,4 @@ def send_message_to_queue(incident_id , DEPARTMENT,ISSUE,STATUS):
    rabbitmq_logger.info(f"Message sent to RabbitMQ queue for futher processing")
    connection.close()
    rabbitmq_logger.info("RabbitMQ connection closed after sending message")
+
