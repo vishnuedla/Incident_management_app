@@ -7,7 +7,6 @@ import logging
 from fastapi import FastAPI
 from database import connection_database 
 
-
 app = FastAPI()
 
 app_logger = logging.getLogger("application_function_logger")
@@ -61,6 +60,5 @@ def read_incident():
       connection.close()
       app_logger.info("Database connection closed after incident reading")
       return result
-
 
 
