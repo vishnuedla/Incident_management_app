@@ -6,3 +6,6 @@ Lib/
 pyvenv.cfg
 __pycache__/
 application.log
+alerting_service/__pycache__/
+alerting_service/worker.log
+

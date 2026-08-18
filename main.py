@@ -9,8 +9,15 @@ from database import connection_database
 
 app = FastAPI()
 
+
+
 app_logger = logging.getLogger("application_function_logger")
 app_logger.setLevel(logging.INFO)
+
+
+stream_handler = logging.StreamHandler()
+stream_handler.setLevel(logging.INFO)
+app_logger.addHandler(stream_handler)
 
 # File handler for this function
 fh = logging.FileHandler("application.log")
@@ -19,6 +26,7 @@ fh.setLevel(logging.INFO)
 # Formatter
 formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
 fh.setFormatter(formatter)
+stream_handler.setFormatter(formatter)
 
 # Attach handler to the logger
 app_logger.addHandler(fh)
