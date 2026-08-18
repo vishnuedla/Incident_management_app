@@ -1,9 +1,8 @@
-
 # Created by venv; see https://docs.python.org/3/library/venv.html
 
-application.log
-Lib/
 Scripts/
 Include/
-__pycache__/
+Lib/
 pyvenv.cfg
+__pycache__/
+application.log
