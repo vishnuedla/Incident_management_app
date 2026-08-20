@@ -1,4 +1,5 @@
 import pika, sys , os
+import multiprocessing
 import json
 import logging
 import smtplib
@@ -27,31 +28,42 @@ alertworker_logger.addHandler(file_log)
 def main():
     credentials = pika.PlainCredentials('vishnu', 'bichu@#123')
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host='localhost', credentials=credentials)
+        pika.ConnectionParameters(host='rabbitmq', credentials=credentials)
     )
     channel = connection.channel()
+    alertworker_logger.info("Connected to RabbitMQ server successfully")
 
-    channel.queue_declare(queue='incident_queue_creation', durable=True, arguments={'x-queue-type': 'quorum'})
+    channel.queue_declare(
+        queue='incident_queue_creation',
+        durable=True,
+        arguments={'x-queue-type': 'quorum'}
+    )
 
-    def callback(ch, method, properties, body): 
-        decode_body = body.decode('utf-8')
-        coverted_body= json.loads(decode_body)
-        alertworker_logger.info("Message is coverted for futher processing")
-        INCIDENT_ID= coverted_body['IncidentId']
-        DEPARTMENT = coverted_body['Department']
-        DESCRIPTION= coverted_body['Issue']
-        STATUS= coverted_body['Status']
-        alertworker_logger.info(f"Message was prepared for sending email alert")
-        email_alert(INCIDENT_ID,DESCRIPTION,DEPARTMENT,STATUS)
-        alertworker_logger.info(f"Email alert Incident creation was sent successfully")
-        
-        
+    def callback(ch, method, properties, body):
+        try:
+            decode_body = body.decode('utf-8')
+            converted_body = json.loads(decode_body)
+            alertworker_logger.info("Message is converted for further processing")
 
-        
+            INCIDENT_ID = converted_body['IncidentId']
+            DEPARTMENT = converted_body['Department']
+            DESCRIPTION = converted_body['Issue']
+            STATUS = converted_body['Status']
 
+            alertworker_logger.info("Message was prepared for sending email alert")
+            email_alert(INCIDENT_ID, DESCRIPTION, DEPARTMENT, STATUS)
+            alertworker_logger.info("Email alert Incident creation was sent successfully")
+            ch.basic_ack(delivery_tag=method.delivery_tag)
+        except Exception as exc:
+            alertworker_logger.exception(f"Error processing RabbitMQ message: {exc}")
+            ch.basic_nack(delivery_tag=method.delivery_tag, requeue=True)
 
-    channel.basic_consume(queue='incident_queue_creation', on_message_callback=callback, auto_ack=True)
-    
+    channel.basic_consume(
+        queue='incident_queue_creation',
+        on_message_callback=callback,
+        auto_ack=False
+    )
+
     print(' [*] Waiting for messages. To exit press CTRL+C')
     channel.start_consuming()
 
