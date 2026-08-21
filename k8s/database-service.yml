@@ -1,15 +1,13 @@
 apiVersion: v1
-kind: Service
+kind: service
 metadata:
-  name: rabbitmq # lowercase
+  name: database-service
+  namespace: incident
 spec:
-  clusterIP: None # headless service
   selector:
-    app: rabbitmq
+    app: database
   ports:
-    - name: amqp # required, lowercase
-      port: 5672
-      targetPort: 5672
-    - name: management
-      port: 15672
-      targetPort: 15672
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+  ClusterIP: None
