@@ -5,7 +5,6 @@ metadata:
   namespace: incident
 spec:
   replicas: 1
-  serviceName: "database-service"
   selector:
     matchLabels:
       app: database
