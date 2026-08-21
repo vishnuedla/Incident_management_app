@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: statefulset
+metadata:
+  name: rabbitmq
+  namespace: incident
+spec:
+  replicas: 1
+  serviceName: "rabbitmq-service"
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:3-management
+          ports:
+            - containerPort: 5672
+            - containerPort: 15672
+          env:
+            - name: RABBITMQ_DEFAULT_USER
+              value: "vishnu"
+            - name: RABBITMQ_DEFAULT_PASS
+              value: "bichu@#123"

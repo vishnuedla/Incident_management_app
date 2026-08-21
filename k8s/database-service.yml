@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: service
+metadata:
+  name: database-service
+  namespace: incident
+spec:
+  selector:
+    app: database
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+  type: headless

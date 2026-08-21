@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: statefulset
+metadata:
+  name: database-database
+  namespace: incident
+spec:
+  replicas: 1
+  serviceName: "database-service"
+  selector:
+    matchLabels:
+      app: database
+  template:
+    metadata:
+      labels:
+        app: database
+    spec:
+      containers:
+        - name: database
+          image: postgres:14
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: "postgres"
+            - name: POSTGRES_USER
+              value: "vishnu"
+            - name: POSTGRES_PASSWORD
+              value: "bichu@#123"
