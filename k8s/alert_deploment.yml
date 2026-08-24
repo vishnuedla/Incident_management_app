@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: deployment
+kind: Deployment
 metadata:
   name: alert-notifier-deployment
   namespace: incident
@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: alert-notifier
-          image: alert-notifier:latest
+          image: alert-notifier:
           ports:
             - containerPort: 8080

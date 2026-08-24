@@ -28,7 +28,7 @@ alertworker_logger.addHandler(file_log)
 def main():
     credentials = pika.PlainCredentials('vishnu', 'bichu@#123')
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host='rabbitmq', port=5672,credentials=credentials)
+        pika.ConnectionParameters(host='rabbitmq',credentials=credentials)
     )
     channel = connection.channel()
     alertworker_logger.info("Connected to RabbitMQ server successfully")

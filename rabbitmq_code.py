@@ -33,7 +33,7 @@ def send_message_to_queue(incident_id , DEPARTMENT,ISSUE,STATUS):
   
    credentials = pika.PlainCredentials('vishnu', 'bichu@#123')
    connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host='rabbitmq', port=5672 , credentials=credentials)
+    pika.ConnectionParameters(host='rabbitmq' , credentials=credentials)
 )
    rabbitmq_logger.info("RabbitMQ connection established")
    channel = connection.channel()
