@@ -1,8 +1,8 @@
 import pika, sys , os
-import multiprocessing
 import json
 import logging
 import smtplib
+import time
 from function import email_alert
 from email.message import EmailMessage
 
@@ -28,7 +28,7 @@ alertworker_logger.addHandler(file_log)
 def main():
     credentials = pika.PlainCredentials('vishnu', 'bichu@#123')
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host='rabbitmq', credentials=credentials)
+        pika.ConnectionParameters(host='rabbitmq', port=5672,credentials=credentials)
     )
     channel = connection.channel()
     alertworker_logger.info("Connected to RabbitMQ server successfully")
@@ -52,6 +52,7 @@ def main():
 
             alertworker_logger.info("Message was prepared for sending email alert")
             email_alert(INCIDENT_ID, DESCRIPTION, DEPARTMENT, STATUS)
+            time.sleep(3)
             alertworker_logger.info("Email alert Incident creation was sent successfully")
             ch.basic_ack(delivery_tag=method.delivery_tag)
         except Exception as exc:

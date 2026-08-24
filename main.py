@@ -4,6 +4,7 @@ import os
 from  rabbitmq_code import send_message_to_queue
 import psycopg2
 import logging
+from pydantic import BaseModel
 from fastapi import FastAPI
 from database import connection_database 
 
@@ -31,8 +32,17 @@ stream_handler.setFormatter(formatter)
 # Attach handler to the logger
 app_logger.addHandler(fh)
 
+
+class IncidentRequest(BaseModel):
+    department: str
+    issue: str
+    status: str
+
 @app.post("/incident_create")
-def create_incident(DEPARTMENT,ISSUE,STATUS):
+def create_incident(incident: IncidentRequest):
+    DEPARTMENT = incident.department
+    ISSUE = incident.issue
+    STATUS = incident.status
     try:
       connection = connection_database()
     except psycopg2.OperationalError as e:
@@ -52,6 +62,7 @@ def create_incident(DEPARTMENT,ISSUE,STATUS):
       app_logger.info("Database connection closed after incident creation")
       # Send message to RabbitMQ queue
       send_message_to_queue(INCIDENT,DEPARTMENT, ISSUE, STATUS)
+      return "Incident created successfully"
 
 @app.get("/incident_read")
 def read_incident():
