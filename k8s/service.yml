@@ -2,7 +2,7 @@ apiVersion: v1
 kind: service
 metadata:
   name: incident-service
-  namespace: incident
+
 spec:
   selector:
     app: incident
