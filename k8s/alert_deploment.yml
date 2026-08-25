@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: alert-notifier
-          image: alert-notifier:
+          image: vishnu4538/alert_worker:v5
           ports:
             - containerPort: 8080
