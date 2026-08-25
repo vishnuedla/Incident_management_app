@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: incident
-          image: vishnu4538/main_app:v5
+          image: vishnu4538/main_app:v6
           ports:
             - containerPort: 8000
