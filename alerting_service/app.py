@@ -3,7 +3,7 @@ import json
 import logging
 import smtplib
 import time
-from function import email_alert
+from function import Email
 from email.message import EmailMessage
 
 
@@ -51,8 +51,8 @@ def main():
             STATUS = converted_body['Status']
 
             alertworker_logger.info("Message was prepared for sending email alert")
-            email_alert(INCIDENT_ID, DESCRIPTION, DEPARTMENT, STATUS)
-            time.sleep(3)
+            email = Email(INCIDENT_ID,DEPARTMENT,DESCRIPTION,STATUS)
+            email.send_email()
             alertworker_logger.info("Email alert Incident creation was sent successfully")
             ch.basic_ack(delivery_tag=method.delivery_tag)
         except Exception as exc:
