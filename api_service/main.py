@@ -35,14 +35,21 @@ app_logger.addHandler(fh)
 
 class IncidentRequest(BaseModel):
     department: str
-    issue: str
-    status: str
+    issue_type : str
+    environment : str
+    description : str
+    priority_type : str
+
+
+
 
 @app.post("/incident_create")
 def create_incident(incident: IncidentRequest):
     DEPARTMENT = incident.department
     ISSUE = incident.issue
-    STATUS = incident.status
+    ENVIRONMENT= incident.environment
+    DESCRIPTION = incident.description
+    PRIORITY= incident.priority_type
     try:
       connection = connection_database()
     except psycopg2.OperationalError as e:
@@ -50,7 +57,7 @@ def create_incident(incident: IncidentRequest):
     else:
       app_logger.info("Database connection established for incident creation")
       cur=connection.cursor()
-      cur.execute("INSERT INTO incident_create (incident_id, DEPARTMENT, ISSUE, STATUS) VALUES ('inc' || nextval('incident_seq') , %s, %s, %s)", (DEPARTMENT, ISSUE, STATUS))
+      cur.execute("INSERT INTO incident_create (incident_id, DEPARTMENT, ISSUE,ENVIRONMENT , DESCRIPTION , PRIORITY ) VALUES ('inc' || nextval('incident_seq') , %s, %s, %s)", (DEPARTMENT, ISSUE,ENVIRONMENT , DESCRIPTION , PRIORITY))
       connection.commit()
       # Fetch the incident_id of the newly created incident
       cur.execute("SELECT currval('incident_seq')")
@@ -61,7 +68,7 @@ def create_incident(incident: IncidentRequest):
       connection.close()
       app_logger.info("Database connection closed after incident creation")
       # Send message to RabbitMQ queue
-      send_message_to_queue(INCIDENT,DEPARTMENT, ISSUE, STATUS)
+      send_message_to_queue(INCIDENT,DEPARTMENT, ISSUE , ENVIRONMENT , DESCRIPTION , PRIORITY)
       return "Incident created successfully"
 
 @app.get("/incident_read")

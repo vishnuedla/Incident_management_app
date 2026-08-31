@@ -17,14 +17,16 @@ fh.setFormatter(formatter)
 # Attach handler to the logger
 rabbitmq_logger.addHandler(fh)
   
-def send_message_to_queue(incident_id , DEPARTMENT,ISSUE,STATUS):
+def send_message_to_queue(INCIDENT,DEPARTMENT, ISSUE , ENVIRONMENT , DESCRIPTION , PRIORITY):
 
 
    incident_store = {
       "IncidentId": incident_id,
       "Department": DEPARTMENT,
       "Issue": ISSUE, 
-      "Status": STATUS
+      "Env": ENVIRONMENT,
+      "Description" : DESCRIPTION,
+      "Priority" : PRIORITY
    }
    rabbitmq_logger.info(f"Preparing to send message to RabbitMQ queue")   
    incident_message= json.dumps(incident_store)

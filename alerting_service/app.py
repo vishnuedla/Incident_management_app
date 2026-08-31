@@ -45,13 +45,14 @@ def main():
             converted_body = json.loads(decode_body)
             alertworker_logger.info("Message is converted for further processing")
 
-            INCIDENT_ID = converted_body['IncidentId']
+            INCIDENT = converted_body['IncidentId']
             DEPARTMENT = converted_body['Department']
-            DESCRIPTION = converted_body['Issue']
-            STATUS = converted_body['Status']
-
+            ISSUE = converted_body['Issue']
+            ENVIRONMENT= converted_body['Env']
+            DESCRIPTION = converted_body['Description']
+            PRIORITY = converted_body['Priority']
             alertworker_logger.info("Message was prepared for sending email alert")
-            email = Email(INCIDENT_ID,DEPARTMENT,DESCRIPTION,STATUS)
+            email = Email(INCIDENT,DEPARTMENT, ISSUE,ENVIRONMENT , DESCRIPTION , PRIORITY)
             email.send_email()
             alertworker_logger.info("Email alert Incident creation was sent successfully")
             ch.basic_ack(delivery_tag=method.delivery_tag)

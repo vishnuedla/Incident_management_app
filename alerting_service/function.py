@@ -7,11 +7,13 @@ class Email:
     USERNAME = "edlavishnu@aol.com"
     PASSWORD = "xotp pyqk cgwg ayga"  # App password
 
-    def __init__(self, incident_id, description, department, status):
-        self.incident_id = incident_id
-        self.description = description
-        self.department = department
-        self.status = status
+    def __init__(self, INCIDENT,DEPARTMENT, ISSUE, ENVIRONMENT , DESCRIPTION , PRIORITY):
+        self.INCIDENT= INCIDENT
+        self.DEPARTMENT = DEPARTMENT
+        self.ISSUE = ISSUE
+        self.ENVIRONMENT = ENVIRONMENT
+        self.DESCRIPTION = DESCRIPTION
+        self.PRIORITY = PRIORITY    
 
     def build_message(self):
         msg = EmailMessage()
@@ -20,9 +22,13 @@ class Email:
         msg['To'] = "edlavishnu2000@gmail.com"
         msg.set_content(
             f"Hello Team,\n\n"
-            f"DESCRIPTION: {self.description}\n"
-            f"Department: {self.department}\n"
-            f"STATUS: {self.status}\n\n"
+            f"Incident ID : {self.INCIDENT}\n"
+            f"Department: {self.DEPARTMENT}\n"
+            f"PRIORITY: {self.PRIORITY}\n"
+             f"ISSUE: {self.ISSUE}\n\n"
+            F"ENVIRONMENT : {self.ENVIRONMENT}\n"
+            f"DESCRIPTION: {self.DESCRIPTION}\n"
+
             "Regards,\nIncident Management alerting Team"
         )
         return msg
