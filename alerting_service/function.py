@@ -17,7 +17,7 @@ class Email:
 
     def build_message(self):
         msg = EmailMessage()
-        msg['Subject'] = f'Incident Alert: {self.incident_id}'
+        msg['Subject'] = f'Incident Alert: {self.INCIDENT}'
         msg['From'] = self.USERNAME
         msg['To'] = "edlavishnu2000@gmail.com"
         msg.set_content(

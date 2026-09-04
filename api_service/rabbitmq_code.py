@@ -21,7 +21,7 @@ def send_message_to_queue(INCIDENT,DEPARTMENT, ISSUE , ENVIRONMENT , DESCRIPTION
 
 
    incident_store = {
-      "IncidentId": incident_id,
+      "IncidentId": INCIDENT,
       "Department": DEPARTMENT,
       "Issue": ISSUE, 
       "Env": ENVIRONMENT,
