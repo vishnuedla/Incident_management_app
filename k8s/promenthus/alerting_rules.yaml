@@ -1,0 +1,32 @@
+groups:
+- name: High pod CPU usage
+  labels:
+    team: montoring team
+  rules:
+  - alert: AlertNotifierPodHighCPU
+    expr: |
+    100 * (
+      sum by (namespace, pod) (
+        rate(container_cpu_usage_seconds_total{
+          job="kubernetes-cadvisor",
+          image!="",
+          pod="alert-notifier-deployment-978c587b7-bl98g"
+        }[5m])
+      )
+      /
+      sum by (namespace, pod) (
+        kube_pod_container_resource_limits{
+          resource="cpu",
+          unit="core",
+          pod="alert-notifier-deployment-978c587b7-bl98g"
+        }
+      )
+   ) > 5
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+    summary: "High CPU for alert-notifier pod"
+    description: >
+      Pod {{ $labels.namespace }}/{{ $labels.pod }} CPU usage
+      has been above 80% of its limit for more than 5 minutes.

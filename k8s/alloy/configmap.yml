@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alloy-config
+  namespace: mon
+data:
+  config.alloy: |
+    discovery.kubernetes "incident_logs" {
+      role = "pod"
+      namespaces {
+        names = ["default"]
+      }
+    }
+
+    discovery.relabel "incident_logs_labeled" {
+      targets = discovery.kubernetes.incident_logs.targets
+      rule {
+        source_labels = ["__meta_kubernetes_pod_name"]
+        regex         = "alert-notifier-deployment.*|incident-deployment.*|rabbitmq-0"
+        action        = "keep"
+      }
+    }
+
+    loki.source.kubernetes "incident_logs" {
+      targets    = discovery.relabel.incident_logs_labeled.output
+      forward_to = [loki.write.incident_logs.receiver]
+    }
+
+    loki.write "incident_logs" {
+      endpoint {
+        url       = "http://loki-gateway.mon.svc.cluster.local:3200/loki/api/v1/push"
+        tenant_id = "1"
+      }
+    }
+
+    discovery.kubernetes "database_logs" {
+      role = "pod"
+      namespaces {
+        names = ["default"]
+      }
+    }
+
+    discovery.relabel "database_logs" {
+      targets = discovery.kubernetes.database_logs.targets
+      rule {
+        source_labels = ["__meta_kubernetes_pod_name"]
+        regex         = "database.*"
+        action        = "keep"
+      }
+    }
+
+
+    loki.write "database_logs" {
+      endpoint {
+        url       = "http://loki-gateway.mon.svc.cluster.local:3200/loki/api/v1/push"
+        tenant_id = "2"
+      }
+    }
+  
+    loki.source.kubernetes "database_logs" {
+      targets    = discovery.relabel.database_logs.output
+      forward_to = [loki.write.database_logs.receiver]
+    }    

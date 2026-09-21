@@ -14,3 +14,8 @@ spec:
       name: http
       port: 15672
       targetPort: 15672
+      name: metrics
+    - protocol: TCP
+      name: http
+      port: 15692
+      targetPort: 15692        

@@ -1,0 +1,25 @@
+apiVersion: fluentbit.fluent.io/v1alpha2
+kind: ClusterOutput
+metadata:
+  name: es
+  labels:
+    fluentbit.fluent.io/enabled: "true"
+spec:
+  matchRegex: .*_(?:alert|incident|rabbitmq|database).*\.log
+  es:
+    host: quickstart-es-http.es-operator.svc
+    port: 9200
+    httpUser:
+      valueFrom:
+        secretKeyRef:
+          name: elastic-secret
+          key: username
+    httpPassword:
+      valueFrom:
+        secretKeyRef:
+          name: elastic-secret
+          key: password
+    tls:
+      verify: false
+    index: vishnu
+    suppressTypeName: "On"
