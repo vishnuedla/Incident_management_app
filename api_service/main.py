@@ -5,11 +5,16 @@ from  rabbitmq_code import send_message_to_queue
 import psycopg2
 import logging
 from pydantic import BaseModel
+from opentelemetry import trace
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from random import randint
 from database import connection_database 
+
+
+
 
 app = FastAPI(title="Incident Management API")
 
@@ -92,7 +97,7 @@ def create_incident(incident: IncidentRequest):
       connection.close()
       app_logger.info("Database connection closed after incident creation")
       # Send message to RabbitMQ queue
-      send_message_to_queue(INCIDENT,DEPARTMENT, ISSUE , ENVIRONMENT , DESCRIPTION , PRIORITY)
+      #send_message_to_queue(INCIDENT,DEPARTMENT, ISSUE , ENVIRONMENT , DESCRIPTION , PRIORITY)
       return "Incident created successfully"
 
 @app.get("/incident_read")
