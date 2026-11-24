@@ -12,7 +12,7 @@ from fastapi.staticfiles import StaticFiles
 from random import randint
 from database import connection_database 
 
-Logging
+
 app_logger = logging.getLogger("application_function_logger")
 app_logger.setLevel(logging.INFO)
 
