@@ -12,34 +12,7 @@ from fastapi.staticfiles import StaticFiles
 from random import randint
 from database import connection_database 
 
-
-
-
-app = FastAPI(title="Incident Management API")
-
-# Enable CORS for cross-origin browser requests
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# Serve frontend static assets if frontend directory exists
-frontend_dir = os.path.join(os.path.dirname(__file__), "frontend")
-if os.path.exists(frontend_dir):
-    app.mount("/frontend", StaticFiles(directory=frontend_dir), name="frontend")
-
-@app.get("/")
-def serve_home():
-    html_path = os.path.join(frontend_dir, "main.html")
-    if os.path.exists(html_path):
-        return FileResponse(html_path)
-    return {"message": "Incident Management API is active. Frontend file not found."}
-
-
-
+Logging
 app_logger = logging.getLogger("application_function_logger")
 app_logger.setLevel(logging.INFO)
 
@@ -60,6 +33,7 @@ stream_handler.setFormatter(formatter)
 # Attach handler to the logger
 app_logger.addHandler(fh)
 
+app = FastAPI(title="Incident Management API")
 
 class IncidentRequest(BaseModel):
     department: str
