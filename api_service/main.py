@@ -5,7 +5,6 @@ from  rabbitmq_code import send_message_to_queue
 import psycopg2
 import logging
 from pydantic import BaseModel
-from opentelemetry import trace
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
@@ -97,7 +96,7 @@ def create_incident(incident: IncidentRequest):
       connection.close()
       app_logger.info("Database connection closed after incident creation")
       # Send message to RabbitMQ queue
-      #send_message_to_queue(INCIDENT,DEPARTMENT, ISSUE , ENVIRONMENT , DESCRIPTION , PRIORITY)
+      send_message_to_queue(INCIDENT,DEPARTMENT, ISSUE , ENVIRONMENT , DESCRIPTION , PRIORITY)
       return "Incident created successfully"
 
 @app.get("/incident_read")
@@ -116,21 +115,3 @@ def read_incident():
       app_logger.info("Database connection closed after incident reading")
       return result
 
-@app.get("/incident_read/{incident_id}")
-def read_single_incident(incident_id: str):
-    try:
-        connection = connection_database()
-    except psycopg2.OperationalError as e:
-        app_logger.critical(f"Database connection error: {e}")
-        raise HTTPException(status_code=500, detail="Database connection failure")
-    else:
-        app_logger.info(f"Database connection established for reading incident {incident_id}")
-        cur = connection.cursor()
-        cur.execute("SELECT * FROM incident_create WHERE incident_id = %s", (incident_id,))
-        result = cur.fetchone()
-        cur.close()
-        connection.close()
-        app_logger.info("Database connection closed after single incident reading")
-        if not result:
-            raise HTTPException(status_code=404, detail=f"Incident {incident_id} not found")
-        return result

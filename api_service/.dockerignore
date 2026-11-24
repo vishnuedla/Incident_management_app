@@ -2,7 +2,15 @@
 Scripts/
 Include/
 pyvenv.cfg
-README.md
 Lib/
-alerting_service/
+lib/
+bin/
 
+__pycache__/
+include/
+pyvenv.cfg
+lib64
+.dockerignore
+.gitignore
+Dockerfile
+Dockerfile_bak

@@ -12,8 +12,13 @@ spec:
       labels:
         app: incident
     spec:
+      securityContext:
+        runAsNonRoot: true      # Ensures the container cannot run as UID 0 (root)
+        runAsUser: 999        # Forces processes to run as user ID 1000
+        runAsGroup: 999       # Primary group ID for the container processes
+        fsGroup: 2000
       containers:
         - name: incident
-          image: vishnu4538/main_app:v6
+          image: vishnu4538/main_app:34
           ports:
             - containerPort: 8000
