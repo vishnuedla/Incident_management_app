@@ -1,10 +1,3 @@
-
-
-resource "aws_vpc" "vpc_a" {
-   cidr_block = "10.0.0.0/16"   
-}
-
-
 resource "aws_subnet" "vpc_a_subnet_public" {
   vpc_id = aws_vpc.vpc_a.id
   cidr_block = "10.0.1.0/24"
@@ -85,7 +78,3 @@ resource "aws_route_table_association" "private2" {
     subnet_id = aws_subnet.vpc_a_subnet_private2.id
     route_table_id = aws_route_table.route_private2.id 
 }
-
-
-
-
